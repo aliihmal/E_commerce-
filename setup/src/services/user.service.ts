@@ -32,4 +32,8 @@ export class userServic{
     public async updateuser(item:User):Promise<void>{
         await (await this.getRepo()).update(item);
     }
+
+    public async getUserById(id:id):Promise<User>{
+        return await (await this.getRepo()).get(id);
+    }
 }

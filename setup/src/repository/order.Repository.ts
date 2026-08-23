@@ -5,11 +5,15 @@ import logger from "../util/logger";
 import { CartRepository } from "./cart.Repository";
 import { ConnectionManager } from "./ConnectionManager";
 import { id, Initializabel, IRpository } from "./IRepository";
+import { orderMapper, orderRow } from "../mapper/order.mapper";
+import { orderManager } from "../services/order.service";
 
 const CREATE_TABLE =`CREATE TABLE IF NOT EXISTS "order"(
                          id TEXT PRIMARY KEY,
                          userId TEXT NOT NULL,
                          price INT NOT NULL)`;
+
+const GET_ALL_ORDER =`SELECT * FROM "order" `;
 
 const CREATE_ORDER =`INSERT INTO "order" (id,userId,price) VALUES (?,?,?)`;
 export class orderRepository implements Initializabel,IRpository<Order>{
@@ -28,7 +32,6 @@ export class orderRepository implements Initializabel,IRpository<Order>{
         throw new Error("Method not implemented.");
     }
     async createWithCart(item:Order,ids:string[]):Promise<id>{
-        console.log(ids);
         const conn = await ConnectionManager.getConnection();
         try{
             await conn.exec("BEGIN TRANSACTION");
@@ -52,14 +55,34 @@ export class orderRepository implements Initializabel,IRpository<Order>{
     get(id: id): Promise<Order> {
         throw new Error("Method not implemented.");
     }
-    getAll(): Promise<Order[]> {
-        throw new Error("Method not implemented.");
+    async getAll(): Promise<Order[]> {
+       try{
+            const conn = await ConnectionManager.getConnection();
+            const myOrder = await conn.all<orderRow[]>(GET_ALL_ORDER);
+            if(myOrder.length==0){
+                return [];
+          }
+          logger.info("All the order where retrived succssfully");
+            const mapper= new orderMapper();
+            return myOrder.map(order => mapper.map(order));
+       }catch(error){
+        logger.error("Error while retriving all the order %s ",(error as Error).message);
+        throw new DBexception("Error whil retiving all the order " , (error as Error));
+       }
     }
+    
     update(item: Order): Promise<void> {
         throw new Error("Method not implemented.");
     }
-    delete(id: id): Promise<void> {
-        throw new Error("Method not implemented.");
+    async delete(id: id): Promise<void> {
+        try{
+            const conn = await ConnectionManager.getConnection();
+            await conn.run(`DELETE FROM "order" WHERE id = ? `,[id]);
+            logger.info("All the orderes where deleted ");
+        }catch(error){
+            logger.error("Erro while delting za ordarz");
+            throw new DBexception("Errow whil deleting za ordarz",(error as Error));
+        }
     }
     async init(): Promise<void> {
         try{

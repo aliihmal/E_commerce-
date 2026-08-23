@@ -18,4 +18,11 @@ export class orderController {
             "order":theid
         })
     }
+    
+    async getAllOrder(req:Request,res:Response):Promise<void>{
+        const orders = await this.orderservice.getAllOrder();
+        res.status(200).json({"message":"All the product where retrived sussccfuly",
+            "orders":orders
+        })
+    }
 }

@@ -21,9 +21,7 @@ export class orderBuilder{
         return this;
     }
     build():Order{
-        console.log("this.id" + this.id);
-        console.log("this.userid" + this.userId);
-        console.log("this .price " + this.price);
+       
         if(!this.id || !this.userId){
             throw new Error("All the element muust be provided while creating the o;klj;lkj;lkjrder");
         }

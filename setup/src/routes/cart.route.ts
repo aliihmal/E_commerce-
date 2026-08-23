@@ -20,5 +20,7 @@ route.route("/add/:id")
     .post(authenticate,asyncHandler(cartController.addToCart.bind(cartController)))
 route.route("/deletecart/:id")
     .delete(asyncHandler(cartController.DeleteCart.bind(cartController)));
+route.route("/getByOrderId/:orderId")
+        .get(asyncHandler(cartController.getByOrderId.bind(cartController)));
 
 export default route;

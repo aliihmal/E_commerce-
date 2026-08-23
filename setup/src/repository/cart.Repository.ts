@@ -4,6 +4,7 @@ import logger from "../util/logger";
 import { ConnectionManager } from "./ConnectionManager";
 import { id, Initializabel, IRpository } from "./IRepository";
 import { cartMapper, cartRow } from "../mapper/Cart.mapper";
+import { log } from "console";
 
 
 
@@ -15,6 +16,7 @@ const CREATE_TABLE = `CREATE TABLE IF NOT EXISTS "cart"(
     quantity INT
 )`;
 
+const GET_BY_ORDER=`SELECT * FROM "cart" WHERE orderId = ? `;
 export class CartRepository implements Initializabel, IRpository<Cart> {
 
     async create(item: Cart): Promise<id> {
@@ -51,7 +53,22 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
             );
         }
     }
-
+    
+    async getByOrderId(orderId:string):Promise<Cart[]>{
+        try{
+            const conn = await ConnectionManager.getConnection();
+            const myCarts = await conn.all<cartRow[]>(GET_BY_ORDER,[orderId]);
+            if(myCarts.length==0){
+                return [];
+            }
+            logger.info("All the cart of  a specific order where retrived succssfuly");
+            const mapper = new cartMapper();
+            return myCarts.map(cart => mapper.map(cart));
+        }catch(error){
+            logger.error("Error while retriving the cart of this specific order %s",(error as Error).message);
+            throw new DBexception("Error while retirving the cart of this specific order ",(error as Error));
+        }
+    }
     async get(id: id): Promise<Cart> {
         try {
             const conn = await ConnectionManager.getConnection();

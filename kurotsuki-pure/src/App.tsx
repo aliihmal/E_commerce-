@@ -20,6 +20,7 @@ import CreateProductPage from './pages/productCreation';
 import DeleteCollectionPage from './pages/DeleteCollection';
 import SetProductOnSalePage from './pages/AddSale';
 import RemoveFromSalePage from './pages/RemoveSale';
+import AdminOrdersPage from './pages/OrderPage';
 
 export default function App() {
   return (
@@ -40,10 +41,13 @@ export default function App() {
               <Route path="/logIn" element={<LoginPage/>}/>
               <Route path="SignUp" element={<RegisterPage/>}/>
 
+              
+
 
               <Route element={<AdminRoute />}>
 
 
+                <Route path="/Orders" element={<AdminOrdersPage/>}/>
                 <Route path="/AddSale" element={<SetProductOnSalePage/>}/>
                 <Route path='creatprod' element={<CreateProductPage/>}/>
                 <Route path="/collectionCreation" element={<AddCollectionPage />} />

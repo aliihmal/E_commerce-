@@ -56,4 +56,13 @@ export class CartController {
         await this.cartService.Delete(id);
         res.status(200).json({"message":"the cart was deleted succssefully"});
     }
+
+    async getByOrderId(req:Request,res:Response):Promise<void>{
+        const orderId = req.params.orderId as string;
+
+        const myCarts = await this.cartService.getByOrderid(orderId);
+        res.status(200).json({"message":"The cart of the specific order are retrived succssfuly",
+            "carts":myCarts
+        })
+    }
 }

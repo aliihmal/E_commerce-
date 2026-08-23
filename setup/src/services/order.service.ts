@@ -28,4 +28,9 @@ export class orderManager{
        const theid=await this.orderrepo.createWithCart(myorder,ids);
        return theid;
     }
+
+    async getAllOrder():Promise<Order[]>{
+      const orders = await this.orderrepo.getAll();
+      return orders;
+    }
 }

@@ -13,5 +13,6 @@ route.route("/")
 
 route.route("/update")
         .put(asyncHandler(usercontroller.updateUser.bind(usercontroller)));
-
+route.route("/getById/:id")
+    .get(asyncHandler(usercontroller.getUserById.bind(usercontroller)));
 export default route;

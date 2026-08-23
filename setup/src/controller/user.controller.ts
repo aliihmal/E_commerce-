@@ -55,4 +55,13 @@ export class userController {
             res.status(200).json({"message" : "The user was updated succsseffuly"})
 
         }
+
+        async getUserById(req:Request,res:Response):Promise<void>{
+            const id = req.params.id as string;
+
+            const theuser = await this.userService.getUserById(id);
+            res.status(200).json({"message":"the user was retrived succssfully",
+                "user":theuser
+            })
+        }
 }

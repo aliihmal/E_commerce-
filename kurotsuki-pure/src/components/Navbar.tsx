@@ -80,6 +80,8 @@ const handleLogout = async () => {
     console.error("Logout error:", error);
   }
 };
+  
+  const isAdmin = user?.role ==="admin";
 
   return (
     <nav className="site-nav">
@@ -125,6 +127,15 @@ const handleLogout = async () => {
         >
           Home
         </NavLink>
+
+        {isAdmin && (
+          <NavLink
+            to="/Orders"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Orders
+          </NavLink>
+        )}
 
       </div>
 
