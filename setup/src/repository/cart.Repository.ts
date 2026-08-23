@@ -3,15 +3,9 @@ import { DBexception } from "../util/Exception/repoException";
 import logger from "../util/logger";
 import { ConnectionManager } from "./ConnectionManager";
 import { id, Initializabel, IRpository } from "./IRepository";
-import { cartMapper } from "../mapper/Cart.mapper";
+import { cartMapper, cartRow } from "../mapper/Cart.mapper";
 
-interface cartRow {
-    id: string;
-    userId: string;
-    productId: string;
-    size: string;
-    quantity: number;
-}
+
 
 const CREATE_TABLE = `CREATE TABLE IF NOT EXISTS "cart"(
     id TEXT PRIMARY KEY,
@@ -29,14 +23,15 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
 
             await conn.run(
                 `INSERT INTO cart
-                (id, userId, productId, size, quantity)
-                VALUES (?, ?, ?, ?, ?)`,
+                (id, userId, productId, size, quantity,orderId)
+                VALUES (?, ?, ?, ?, ?, ? )`,
                 [
                     item.id,
                     item.user_id,
                     item.product_id,
                     item.size,
-                    item.quantity
+                    item.quantity,
+                    item.orderId
                 ]
             );
 
@@ -62,7 +57,7 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
             const conn = await ConnectionManager.getConnection();
 
             const row = await conn.get<cartRow>(
-                `SELECT id, userId, productId, size, quantity
+                `SELECT *
                  FROM cart
                  WHERE id = ?`,
                 [id]
@@ -126,13 +121,15 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
                  SET userId = ?,
                      productId = ?,
                      size = ?,
-                     quantity = ?
+                     quantity = ?,
+                     orderId =  ?
                  WHERE id = ?`,
                 [
                     item.user_id,
                     item.product_id,
                     item.size,
                     item.quantity,
+                    item.orderId,
                     item.id
                 ]
             );
@@ -195,7 +192,7 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
         const conn = await ConnectionManager.getConnection();
 
         const rows = await conn.all<cartRow[]>(
-            `SELECT id, userId, productId, size, quantity
+            `SELECT id, userId, productId, size, quantity ,orderId
              FROM cart
              WHERE userId = ?`,
             [userId]
@@ -217,7 +214,7 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
         );
     }
 }
-
+    
     async init(): Promise<void> {
         try {
             const conn = await ConnectionManager.getConnection();
@@ -238,4 +235,5 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
             );
         }
     }
+
 }

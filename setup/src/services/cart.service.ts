@@ -62,7 +62,8 @@ export class CartService {
                 user_id: userId,
                 product_id: productId,
                 size: size,
-                quantity: 1
+                quantity: 1,
+                orderId: null
             };
 
             await this.cartRepository.create(newCartItem);

@@ -6,7 +6,7 @@ export class cartBuilder{
     product_id!:string;
     size!:string;
     quantity!:number;
-
+    orderId!:string|null;
     public static newCartBuilder():cartBuilder{
         return new cartBuilder();
     }
@@ -31,10 +31,14 @@ export class cartBuilder{
         this.id=id;
         return this;
     }
+    setOrderid(orderid:string | null):cartBuilder{
+        this.orderId=orderid;
+        return this;
+    }
     build():Cart{
         if(!this.id || !this.user_id || !this.product_id || !this.quantity || !this.size || ! this.quantity){
             throw new Error("All the element must be provided before creating the cart item");
         }
-        return new Cart(this.id,this.user_id,this.product_id,this.size,this.quantity);
+        return new Cart(this.id,this.user_id,this.product_id,this.size,this.quantity,this.orderId);
     }
 }
