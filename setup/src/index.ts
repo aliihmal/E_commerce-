@@ -20,7 +20,7 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(cors({
-  origin: 'http://localhost:5173', // your actual frontend URL
+  origin:config.origin, // your actual frontend URL
   credentials: true,
 }));
 app.use(requestLogger);
