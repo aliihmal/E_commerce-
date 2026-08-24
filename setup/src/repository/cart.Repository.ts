@@ -10,13 +10,14 @@ import { log } from "console";
 
 const CREATE_TABLE = `CREATE TABLE IF NOT EXISTS "cart"(
     id TEXT PRIMARY KEY,
-    userId TEXT NOT NULL,
-    productId TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "productId" TEXT NOT NULL,
     size TEXT NOT NULL,
-    quantity INT
+    quantity INT,
+    "orderId" TEXT
 )`;
 
-const GET_BY_ORDER=`SELECT * FROM "cart" WHERE orderId = ? `;
+const GET_BY_ORDER=`SELECT * FROM "cart" WHERE "orderId" = ? `;
 export class CartRepository implements Initializabel, IRpository<Cart> {
 
     async create(item: Cart): Promise<id> {
@@ -24,8 +25,8 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
             const conn = await ConnectionManager.getConnection();
 
             await conn.run(
-                `INSERT INTO cart
-                (id, userId, productId, size, quantity,orderId)
+                `INSERT INTO "cart"
+                (id, "userId", "productId", size, quantity, "orderId")
                 VALUES (?, ?, ?, ?, ?, ? )`,
                 [
                     item.id,
@@ -66,7 +67,7 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
             return myCarts.map(cart => mapper.map(cart));
         }catch(error){
             logger.error("Error while retriving the cart of this specific order %s",(error as Error).message);
-            throw new DBexception("Error while retirving the cart of this specific order ",(error as Error));
+            throw new DBexception("Error while retriving the cart of this specific order %s",(error as Error))
         }
     }
     async get(id: id): Promise<Cart> {
@@ -75,7 +76,7 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
 
             const row = await conn.get<cartRow>(
                 `SELECT *
-                 FROM cart
+                 FROM "cart"
                  WHERE id = ?`,
                 [id]
             );
@@ -108,8 +109,8 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
             const conn = await ConnectionManager.getConnection();
 
             const rows = await conn.all<cartRow[]>(
-                `SELECT id, userId, productId, size, quantity
-                 FROM cart`
+                `SELECT id, "userId", "productId", size, quantity
+                 FROM "cart"`
             );
 
             const mapper = new cartMapper();
@@ -132,14 +133,13 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
     async update(item: Cart): Promise<void> {
         try {
             const conn = await ConnectionManager.getConnection();
-
-            const result = await conn.run(
-                `UPDATE cart
-                 SET userId = ?,
-                     productId = ?,
+await conn.run(
+                `UPDATE "cart"
+                 SET "userId" = ?,
+                     "productId" = ?,
                      size = ?,
                      quantity = ?,
-                     orderId =  ?
+                     "orderId" =  ?
                  WHERE id = ?`,
                 [
                     item.user_id,
@@ -151,12 +151,7 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
                 ]
             );
 
-            if (result.changes === 0) {
-                throw new Error(
-                    `Cart item with id ${item.id} was not found`
-                );
-            }
-
+        
             logger.info("Cart item updated successfully");
 
         } catch (error) {
@@ -176,17 +171,13 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
         try {
             const conn = await ConnectionManager.getConnection();
 
-            const result = await conn.run(
-                `DELETE FROM cart
+             await conn.run(
+                `DELETE FROM "cart"
                  WHERE id = ?`,
                 [id]
             );
 
-            if (result.changes === 0) {
-                throw new Error(
-                    `Cart item with id ${id} was not found`
-                );
-            }
+          
 
             logger.info("Cart item deleted successfully");
 
@@ -209,9 +200,9 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
         const conn = await ConnectionManager.getConnection();
 
         const rows = await conn.all<cartRow[]>(
-            `SELECT id, userId, productId, size, quantity ,orderId
-             FROM cart
-             WHERE userId = ?`,
+            `SELECT id, "userId", "productId", size, quantity, "orderId"
+             FROM "cart"
+             WHERE "userId" = ?`,
             [userId]
         );
 

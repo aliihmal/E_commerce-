@@ -11,7 +11,8 @@ const CREATE_USER_TABLE =`CREATE TABLE IF NOT EXISTS "user"(
                     name TEXT NOT NULL,
                     email TEXT NOT NULL,
                     password TEXT NOT NULL,
-                    role TEXT NOT NULL)`;
+                    role TEXT NOT NULL,
+                    phone TEXT)`;
 
 const ADD_USER =`INSERT INTO "user" (id,name,email,password,role,phone) VALUES (?,?,?,?,?,?)`;
 
@@ -71,7 +72,7 @@ export class UserRepository implements Initializabel,IRpository<User>{
                 const db = await ConnectionManager.getConnection();
 
             const query = `
-                UPDATE User
+                UPDATE "user"
                 SET
                     name = ?,
                     email = ?,

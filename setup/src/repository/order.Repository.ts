@@ -10,12 +10,12 @@ import { orderManager } from "../services/order.service";
 
 const CREATE_TABLE =`CREATE TABLE IF NOT EXISTS "order"(
                          id TEXT PRIMARY KEY,
-                         userId TEXT NOT NULL,
+                         "userId" TEXT NOT NULL,
                          price INT NOT NULL)`;
 
 const GET_ALL_ORDER =`SELECT * FROM "order" `;
 
-const CREATE_ORDER =`INSERT INTO "order" (id,userId,price) VALUES (?,?,?)`;
+const CREATE_ORDER =`INSERT INTO "order" (id,"userId",price) VALUES (?,?,?)`;
 export class orderRepository implements Initializabel,IRpository<Order>{
 
     constructor(private cartrepo:CartRepository){}

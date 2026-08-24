@@ -34,6 +34,6 @@ export class userServic{
     }
 
     public async getUserById(id:id):Promise<User>{
-        return await (await this.getRepo()).get(id);
+        return await (await this.getRepo()).get(id);//  and the code will be writing in the backend of thhe devops evgeneering and  
     }
 }

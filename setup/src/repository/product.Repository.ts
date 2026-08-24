@@ -11,34 +11,34 @@ const CREATE_TABLE=`CREATE TABLE IF NOT EXISTS "product"(
                                 name TEXT NOT NULL,
                                 description TEXT NOT NULL,
                                 price INT NOT NULL,
-                                salePrice INT ,
-                                discountPercent INT ,
-                                onSale INT NOT NULL,
+                                "salePrice" INT ,
+                                "discountPercent" INT ,
+                                "onSale" INT NOT NULL,
                                 stock INT NOT NULL,
-                                collectionId TEXT ,
-                                imgSrc TEXT NOT NULL)`;
+                                "collectionId" TEXT ,
+                                "imgSrc" TEXT NOT NULL)`;
 const GET_ALL_PRODUCT =`SELECT * FROM "product"`;
 const GET_BY_ID=`SELECT * FROM "product" WHERE id = ?`;
-const INSERT_PRODUCT = `INSERT INTO "product" (id,name,description,price,salePrice,discountPercent,onSale,stock,collectionId,imgSrc) VALUES (?,?,?,?,?,?,?,?,?,?)`
+const INSERT_PRODUCT = `INSERT INTO "product" (id,name,description,price,"salePrice","discountPercent","onSale",stock,"collectionId","imgSrc") VALUES (?,?,?,?,?,?,?,?,?,?)`
 
-const UPDATE_PRODUCT=`UPDATE "product" SET name=?,description=?,price=?,salePrice=?,
-                        discountPercent=?,onSale=?,stock=?,collectionId=?,imgSrc=?
+const UPDATE_PRODUCT=`UPDATE "product" SET name=?,description=?,price=?,"salePrice"=?,
+                        "discountPercent"=?,"onSale"=?,stock=?,"collectionId"=?,"imgSrc"=?
                         WHERE id = ?`;
 const DELETE_PRODUCT = `DELETE FROM "product" WHERE id = ?`;
-const GET_BY_COLLECTION=`SELECT * FROM "product" WHERE collectionId =?`;
+const GET_BY_COLLECTION=`SELECT * FROM "product" WHERE "collectionId" =?`;
 
-const PROD_ON_SALE =`SELECT * FROM "product" WHERE onSale =1 `;
+const PROD_ON_SALE =`SELECT * FROM "product" WHERE "onSale" =1 `;
 export class ProductRepo implements Initializabel ,IRpository<Product>{
     async create(item: Product): Promise<id> {
        try{
         const conn = await ConnectionManager.getConnection();
-        await conn.run(INSERT_PRODUCT,[item.id,item.name,item.description,item.price,item.salePrice,item.discountPercent,item.onSale,item.stock
+        await conn.run(INSERT_PRODUCT,[item.id,item.name,item.description,item.price,item.salePrice,item.discountPercent,item.onSale ? 1 : 0,item.stock
             ,item.collectionId,item.imgSrc
         ]) 
         logger.info("The product was created succssefully");
         return item.id;
        }catch(error ){
-        logger.error("Error while creating the order");
+        logger.error("Error while creating the product %s ",(error as Error).message);
         throw new DBexception("Error while creating the order",(error as Error));
        }
     }
@@ -84,13 +84,13 @@ export class ProductRepo implements Initializabel ,IRpository<Product>{
             const conn = await ConnectionManager.getConnection();
             await conn.run(UPDATE_PRODUCT,[item.name,item.description,item.price,
                 item.salePrice,item.discountPercent,
-                item.onSale,item.stock,item.collectionId,item.imgSrc,item.id])
+                item.onSale ? 1 : 0,item.stock,item.collectionId,item.imgSrc,item.id])
             logger.info("Updated the product succssefully");
         }catch(error){
             logger.error("Error while updating the product   %s " , (error as Error ).message);
             throw new DBexception("Error while updating the product " , (error as Error));
-        }
-    }
+        } 
+    } 
 
     
     async delete(id: id): Promise<void> {

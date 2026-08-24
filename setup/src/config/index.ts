@@ -11,7 +11,9 @@ export default{
      isProduction:process.env.NODE_ENV == "production",
      host: process.env.HOST || 'localhost',
      storagePath:{
+        
         sqlite:'src/Data/database.db',
+        postegress:process.env.DATABASE_URL,
     },
     auth:{
           secretKey:process.env.JWT_SECRET_KEY || "secret_1234567890",

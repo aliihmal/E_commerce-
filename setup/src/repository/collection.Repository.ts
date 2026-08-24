@@ -10,8 +10,9 @@ const CREATE_TABLE =`CREATE TABLE IF NOT EXISTS "collection"(
                                 id TEXT PRIMARY KEY,
                                 name TEXT NOT NULL,
                                 description TEXT NOT NULL,
-                                imgSrc TEXT NOT NULL)`;
-const CREATE_COLLECTION=`INSERT INTO "collection" (id,name,description,imgSrc,price) VALUES (?,?,?,?,?)`
+                                "imgSrc" TEXT NOT NULL,
+                                price INT)`;
+const CREATE_COLLECTION=`INSERT INTO "collection" (id,name,description,"imgSrc",price) VALUES (?,?,?,?,?)`
 const DELETE_COLLECTION = `DELETE FROM "collection" WHERE id = ?`;
 const GET_ALL_COLLECTION=`SELECT * FROM "collection"`;
 
@@ -21,7 +22,7 @@ export class CollectionRepository implements Initializabel ,IRpository<Collectio
     async create(item: Collection): Promise<id> {
       try{
         const conn  = await ConnectionManager.getConnection();
-        await conn.run(CREATE_COLLECTION,[item.id,item.name,item.description,item.imgSrc]);
+        await conn.run(CREATE_COLLECTION,[item.id,item.name,item.description,item.imgSrc,item.price]);
         logger.info("The collection Was created successfully");
         return item.id; 
       }catch(error){
@@ -73,7 +74,7 @@ export class CollectionRepository implements Initializabel ,IRpository<Collectio
             return realResult;
         }catch(error){
             logger.error("Error while retrieving the collection of the specific id %s " ,(error as Error).message);
-            throw new DBexception("Error while retrieing the collection of the specifc id ",(error as Error));
+            throw new DBexception("Error while retreivin the collection of the specific id ",(error as Error));
         }
     }
 
@@ -102,12 +103,9 @@ export class CollectionRepository implements Initializabel ,IRpository<Collectio
     async delete(id: id): Promise<void> {
             try {
                 const conn = await ConnectionManager.getConnection();
+             await conn.run(DELETE_COLLECTION, [id]);
 
-                const result = await conn.run(DELETE_COLLECTION, [id]);
-
-                if (result.changes === 0) {
-                    throw new Error("Collection with the specified id was not found");
-                }
+                
 
                 logger.info(
                     "The collection with id %s was deleted successfully",
