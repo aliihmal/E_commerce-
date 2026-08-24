@@ -7,6 +7,9 @@ import { ConnectionManager } from "./ConnectionManager";
 import { id, Initializabel, IRpository } from "./IRepository";
 import { orderMapper, orderRow } from "../mapper/order.mapper";
 import { orderManager } from "../services/order.service";
+import { Cart } from "../model/cart.model";
+import { cartOrderRepos } from "./cartOrder.Repository";
+import { generateUUID } from "../util";
 
 const CREATE_TABLE =`CREATE TABLE IF NOT EXISTS "order"(
                          id TEXT PRIMARY KEY,
@@ -18,7 +21,7 @@ const GET_ALL_ORDER =`SELECT * FROM "order" `;
 const CREATE_ORDER =`INSERT INTO "order" (id,"userId",price) VALUES (?,?,?)`;
 export class orderRepository implements Initializabel,IRpository<Order>{
 
-    constructor(private cartrepo:CartRepository){}
+    constructor(private cartrepo:CartRepository,private cartOrder:cartOrderRepos){}
 
 
     async getCarRepo():Promise<CartRepository>{
@@ -27,6 +30,13 @@ export class orderRepository implements Initializabel,IRpository<Order>{
                 await this.cartrepo.init();
             }
             return this.cartrepo;
+    }
+    async getCartOrderRepo():Promise<cartOrderRepos>{
+        if(!this.cartOrder){
+            this.cartOrder=new cartOrderRepos();
+            await this.cartOrder.init();
+        }
+        return this.cartOrder;
     }
     create(item: Order): Promise<id> {
         throw new Error("Method not implemented.");
@@ -39,7 +49,8 @@ export class orderRepository implements Initializabel,IRpository<Order>{
             for(let i =0 ; i < ids.length;i++){
                 const cart = await (await this.getCarRepo()).get(ids[i]);
                 cart.orderId = item.id;
-                await (await this.getCarRepo()).update(cart);
+                cart.id = generateUUID("cartOrder");
+                await (await this.getCartOrderRepo()).create(cart);
             }
             
             await conn.exec("COMMIT");
@@ -75,11 +86,22 @@ export class orderRepository implements Initializabel,IRpository<Order>{
         throw new Error("Method not implemented.");
     }
     async delete(id: id): Promise<void> {
-        try{
             const conn = await ConnectionManager.getConnection();
+        try{
+            
+            await conn.exec("BEGIN TRANSACTION");
             await conn.run(`DELETE FROM "order" WHERE id = ? `,[id]);
-            logger.info("All the orderes where deleted ");
+            const carts = await (await this.getCartOrderRepo()).getByOrderId(id);
+
+            for(let i =0 ; i < carts.length;i++){
+                await this.cartrepo.delete(carts[i].id);
+            }
+            
+            await conn.exec("COMMIT");
+            logger.info(" the orderes where deleted ");
         }catch(error){
+            
+            await conn.exec("ROLLBACK");
             logger.error("Erro while delting za ordarz");
             throw new DBexception("Errow whil deleting za ordarz",(error as Error));
         }

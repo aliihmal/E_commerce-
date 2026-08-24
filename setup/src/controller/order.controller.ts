@@ -25,4 +25,9 @@ export class orderController {
             "orders":orders
         })
     }
+    async deleteOrde(req:Request,res:Response):Promise<void>{
+        const orderid = req.params.id as string;
+        await this.orderservice.deleteOrder(orderid);
+        res.status(200).json({"message":"The order was created succssfully"})
+    }
 }

@@ -44,7 +44,7 @@ export class CartRepository implements Initializabel, IRpository<Cart> {
 
         } catch (error) {
             logger.info(
-                "Error while creating the cart item %s",
+                "Error while creating the cart item the real cart %s",
                 (error as Error).message
             );
 

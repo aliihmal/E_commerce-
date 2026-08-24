@@ -33,4 +33,8 @@ export class orderManager{
       const orders = await this.orderrepo.getAll();
       return orders;
     }
+
+    async deleteOrder(id:id):Promise<void>{
+      await this.orderrepo.delete(id);
+    }
 }

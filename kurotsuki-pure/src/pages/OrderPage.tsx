@@ -79,6 +79,7 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchOrders();
@@ -89,10 +90,6 @@ export default function AdminOrdersPage() {
     setError('');
 
     try {
-      // =========================
-      // 1. Get all orders
-      // =========================
-
       const ordersResponse = await fetch('http://localhost:3000/order/getAll', {
         credentials: 'include',
       });
@@ -104,18 +101,8 @@ export default function AdminOrdersPage() {
       const data = await ordersResponse.json();
       const orderList: OrderApi[] = data.orders;
 
-      console.log('Raw orders response:', orderList);
-
-      // =========================
-      // 2. For each order, get:
-      //    - the user who placed it
-      //    - its cart items, then the product for each
-      // =========================
-
       const result = await Promise.all(
         orderList.map(async (order) => {
-          // -------- user --------
-
           const userResponse = await fetch(
             `http://localhost:3000/user/getById/${order.userId}`,
             { credentials: 'include' }
@@ -124,14 +111,12 @@ export default function AdminOrdersPage() {
           if (!userResponse.ok) {
             throw new Error(`Failed to fetch user ${order.userId}`);
           }
-          
+
           const userData: UserResponse = await userResponse.json();
           const user = userData.user;
 
-          // -------- cart items --------
-
           const cartResponse = await fetch(
-            `http://localhost:3000/cart/getByOrderId/${order.id}`,
+            `http://localhost:3000/cartOrder/getByOrderId/${order.id}`,
             { credentials: 'include' }
           );
 
@@ -140,6 +125,7 @@ export default function AdminOrdersPage() {
           }
 
           const cartData = await cartResponse.json();
+          console.log(cartData.message);
           const cartItems: CartItemApi[] = cartData.carts;
 
           const items = await Promise.all(
@@ -199,6 +185,32 @@ export default function AdminOrdersPage() {
     }
   }
 
+  async function handleDeleteOrder(id: string) {
+    if (!confirm(`Delete order #${id}? This cannot be undone.`)) return;
+
+    setDeletingId(id);
+    setError('');
+
+    try {
+      const response = await fetch(`http://localhost:3000/order/deleteOrder/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || data.error || 'Failed to delete order');
+      }
+
+      setOrders((prev) => prev.filter((o) => o.id !== id));
+      if (expanded === id) setExpanded(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : `Could not delete order #${id}`);
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
   return (
     <div className="page-wrap">
       <div className="page-hero">
@@ -255,14 +267,23 @@ export default function AdminOrdersPage() {
                       </td>
                       <td className="mono">${order.total.toFixed(2)}</td>
                       <td>
-                        <button
-                          className="btn btn-outline btn-sm"
-                          onClick={() =>
-                            setExpanded(expanded === order.id ? null : order.id)
-                          }
-                        >
-                          {expanded === order.id ? 'Hide' : 'Items'}
-                        </button>
+                        <div className="action-row">
+                          <button
+                            className="btn btn-outline btn-sm"
+                            onClick={() =>
+                              setExpanded(expanded === order.id ? null : order.id)
+                            }
+                          >
+                            {expanded === order.id ? 'Hide' : 'Items'}
+                          </button>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            disabled={deletingId === order.id}
+                            onClick={() => handleDeleteOrder(order.id)}
+                          >
+                            {deletingId === order.id ? 'Deleting…' : 'Delete'}
+                          </button>
+                        </div>
                       </td>
                     </tr>
 
