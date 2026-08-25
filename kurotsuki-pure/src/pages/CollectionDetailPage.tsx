@@ -38,7 +38,7 @@ export default function CollectionDetailPage() {
       try {
 
         const response = await fetch(
-          `http://localhost:3000/collection/getById/${id}`
+          `${import.meta.env.VITE_API_URL}/collection/getById/${id}`
         );
 
         if (!response.ok) {
@@ -85,7 +85,7 @@ export default function CollectionDetailPage() {
       try {
 
         const response = await fetch(
-          `http://localhost:3000/product/getByCollectionId/${id}`
+          `${import.meta.env.VITE_API_URL}/product/getByCollectionId/${id}`
         );
 
         if (!response.ok) {
@@ -166,7 +166,7 @@ export default function CollectionDetailPage() {
       // =========================
 
       const response = await fetch(
-        `http://localhost:3000/cart/add/${userId}`,
+        `${import.meta.env.VITE_API_URL}/cart/add/${userId}`,
         {
           method: "POST",
 

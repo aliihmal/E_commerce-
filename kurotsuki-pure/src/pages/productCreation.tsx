@@ -46,7 +46,7 @@ export default function CreateProductPage() {
 
     try {
       const response = await fetch(
-        'http://localhost:3000/product/',
+        `${import.meta.env.VITE_API_URL}/product/`,
         {
           method: 'POST',
           credentials: 'include',

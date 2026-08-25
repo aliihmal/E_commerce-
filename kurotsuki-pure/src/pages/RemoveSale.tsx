@@ -25,7 +25,7 @@ export default function RemoveFromSalePage() {
     setLoading(true);
     setLoadError('');
     try {
-      const response = await fetch('http://localhost:3000/product/getProdOnSale', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/product/getProdOnSale`, {
         credentials: 'include',
       });
       if (!response.ok) throw new Error('Failed to load products on sale');
@@ -45,7 +45,7 @@ export default function RemoveFromSalePage() {
     setError('');
 
     try {
-      const response = await fetch(`http://localhost:3000/product/RemoveFromSale/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/product/RemoveFromSale/${id}`, {
         method: 'put',
         credentials: 'include',
       });

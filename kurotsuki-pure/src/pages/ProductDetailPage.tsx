@@ -17,7 +17,7 @@ export default function ProductDetailPage() {
     const fetchProduct = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/product/get/${id}`,
+          `${import.meta.env.VITE_API_URL}/product/get/${id}`,
           {
             credentials: "include"
           }
@@ -75,7 +75,7 @@ export default function ProductDetailPage() {
       // Add product to backend cart
       // ==========================================
       const response = await fetch(
-        `http://localhost:3000/cart/add/${user.id}`,
+        `${import.meta.env.VITE_API_URL}/cart/add/${user.id}`,
         {
           method: "POST",
           credentials: "include",

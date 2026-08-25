@@ -24,7 +24,7 @@ export default function SetProductOnSalePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:3000/product/getAllProduct', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/product/getAllProduct`, {
           credentials: 'include',
         });
         if (!response.ok) throw new Error('Failed to load products');
@@ -63,7 +63,7 @@ export default function SetProductOnSalePage() {
     };
 
     try {
-      const response = await fetch('http://localhost:3000/product/setProductOnSale', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/product/setProductOnSale`, {
         method: 'put',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

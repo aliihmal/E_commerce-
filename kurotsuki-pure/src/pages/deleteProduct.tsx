@@ -17,7 +17,7 @@ export default function DeleteProductPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:3000/product/getAllProduct', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/product/getAllProduct`, {
           credentials: 'include',
         });
         if (!response.ok) throw new Error('Failed to load products');
@@ -37,7 +37,7 @@ export default function DeleteProductPage() {
 
   setDeletingId(id);
   try {
-    const response = await fetch(`http://localhost:3000/product/deleteProd/${id}`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/product/deleteProd/${id}`, {
       method: 'DELETE',
       credentials: 'include',
     });

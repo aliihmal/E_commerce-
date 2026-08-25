@@ -25,7 +25,7 @@ export default function CollectionsPage() {
       const fetchCollection= async () => {
         try {
           const response = await fetch(
-            "http://localhost:3000/collection/GetAll"
+            `${import.meta.env.VITE_API_URL}/collection/GetAll`
           );
   
           if (!response.ok) {

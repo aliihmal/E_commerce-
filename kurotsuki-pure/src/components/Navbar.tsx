@@ -31,7 +31,7 @@ export default function Navbar() {
 
   // Check if the user is logged in
   useEffect(() => {
-    fetch("http://localhost:3000/auth/me", {
+    fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
       credentials: "include"
     })
       .then(async (res) => {
@@ -56,7 +56,7 @@ export default function Navbar() {
 const handleLogout = async () => {
   try {
     const response = await fetch(
-      "http://localhost:3000/auth/logout",
+      `${import.meta.env.VITE_API_URL}/auth/logout`,
       {
         method: "POST",
         credentials: "include"

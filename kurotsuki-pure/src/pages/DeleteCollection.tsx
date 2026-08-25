@@ -17,7 +17,7 @@ export default function DeleteCollectionPage() {
   useEffect(() => {
     const fetchCollections = async () => {
       try {
-        const response = await fetch('http://localhost:3000/collection/GetAll', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/collection/GetAll`, {
           credentials: 'include',
         });
         if (!response.ok) throw new Error('Failed to load collections');
@@ -37,7 +37,7 @@ export default function DeleteCollectionPage() {
 
     setDeletingId(id);
     try {
-      const response = await fetch(`http://localhost:3000/collection/delete/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/collection/delete/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });

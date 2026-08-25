@@ -81,7 +81,7 @@ export default function CartDrawer() {
             const ids = items.map((item) => item.id);
 
             const response = await fetch(
-                `http://localhost:3000/order/${userId}`,
+                `${import.meta.env.VITE_API_URL}/order/${userId}`,
                 {
                     method: "POST",
                     credentials: "include",
@@ -123,7 +123,7 @@ export default function CartDrawer() {
             }
 
             const response = await fetch(
-                `http://localhost:3000/cart/getByUser/${userId}`,
+                `${import.meta.env.VITE_API_URL}/cart/getByUser/${userId}`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -142,7 +142,7 @@ export default function CartDrawer() {
 
                     if (id.startsWith("product")) {
                         const productResponse = await fetch(
-                            `http://localhost:3000/product/get/${id}`,
+                            `${import.meta.env.VITE_API_URL}/product/get/${id}`,
                             {
                                 method: "GET",
                                 credentials: "include",
@@ -177,7 +177,7 @@ export default function CartDrawer() {
 
                     if (id.startsWith("collection")) {
                         const collectionResponse = await fetch(
-                            `http://localhost:3000/collection/getById/${id}`,
+                            `${import.meta.env.VITE_API_URL}/collection/getById/${id}`,
                             {
                                 method: "GET",
                                 credentials: "include",
@@ -235,7 +235,7 @@ export default function CartDrawer() {
     async function increaseQuantity(item: DisplayCartItem) {
         try {
             const response = await fetch(
-                `http://localhost:3000/cart/update/${item.id}`,
+                `${import.meta.env.VITE_API_URL}/cart/update/${item.id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -266,7 +266,7 @@ export default function CartDrawer() {
 
         try {
             const response = await fetch(
-                `http://localhost:3000/cart/update/${item.id}`,
+                `${import.meta.env.VITE_API_URL}/cart/update/${item.id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -293,7 +293,7 @@ export default function CartDrawer() {
     async function removeItem(id: string) {
         try {
             const response = await fetch(
-                `http://localhost:3000/cart/deletecart/${id}`,
+                `${import.meta.env.VITE_API_URL}/cart/deletecart/${id}`,
                 {
                     method: "DELETE",
                     credentials: "include",

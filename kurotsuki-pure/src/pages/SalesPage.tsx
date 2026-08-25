@@ -25,7 +25,7 @@ export default function SalesPage() {
                 setLoading(true);
 
                 const response = await fetch(
-                    "http://localhost:3000/product/getProdOnSale",
+                    `${import.meta.env.VITE_API_URL}/product/getProdOnSale`,
                     {
                         method: "GET",
                         credentials: "include"

@@ -16,7 +16,7 @@ export default function AddCollectionPage() {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/product/getAllProduct"
+          `${import.meta.env.VITE_API_URL}/product/getAllProduct`
         );
 
         if (!response.ok) {
@@ -88,7 +88,7 @@ export default function AddCollectionPage() {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/collection",
+        `${import.meta.env.VITE_API_URL}/collection`,
         {
           method: "POST",
           credentials: "include",

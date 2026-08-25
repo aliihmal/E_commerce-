@@ -90,7 +90,7 @@ export default function AdminOrdersPage() {
     setError('');
 
     try {
-      const ordersResponse = await fetch('http://localhost:3000/order/getAll', {
+      const ordersResponse = await fetch(`${import.meta.env.VITE_API_URL}/order/getAll`, {
         credentials: 'include',
       });
 
@@ -104,7 +104,7 @@ export default function AdminOrdersPage() {
       const result = await Promise.all(
         orderList.map(async (order) => {
           const userResponse = await fetch(
-            `http://localhost:3000/user/getById/${order.userId}`,
+            `${import.meta.env.VITE_API_URL}/user/getById/${order.userId}`,
             { credentials: 'include' }
           );
 
@@ -116,7 +116,7 @@ export default function AdminOrdersPage() {
           const user = userData.user;
 
           const cartResponse = await fetch(
-            `http://localhost:3000/cartOrder/getByOrderId/${order.id}`,
+            `${import.meta.env.VITE_API_URL}/cartOrder/getByOrderId/${order.id}`,
             { credentials: 'include' }
           );
 
@@ -131,7 +131,7 @@ export default function AdminOrdersPage() {
           const items = await Promise.all(
             cartItems.map(async (cartItem) => {
               const productResponse = await fetch(
-                `http://localhost:3000/product/get/${cartItem.product_id}`,
+                `${import.meta.env.VITE_API_URL}/product/get/${cartItem.product_id}`,
                 { credentials: 'include' }
               );
 
@@ -192,7 +192,7 @@ export default function AdminOrdersPage() {
     setError('');
 
     try {
-      const response = await fetch(`http://localhost:3000/order/deleteOrder/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/order/deleteOrder/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
