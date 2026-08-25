@@ -9,7 +9,7 @@ export default{
     isDev:process.env.NODE_ENV=="development",
      port:process.env.PORT?parseInt(process.env.PORT): 3000,
      isProduction:process.env.NODE_ENV == "production",
-     host: process.env.HOST ||  "0.0.0.0",
+     host: process.env.HOST || "0.0.0.0",
      storagePath:{
         
         sqlite:'src/Data/database.db',
@@ -25,5 +25,5 @@ export default{
         privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
         urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
     },
-    origin:process.env.origin
+    origin: process.env.ORIGIN
 }
