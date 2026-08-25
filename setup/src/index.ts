@@ -12,14 +12,15 @@ import cookieParser from "cookie-parser";
 const app = express() ;
 
 
-
-app.use(helmet());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
 app.use(cors({
   origin:config.origin, // your actual frontend URL
   credentials: true,
 }));
+
+app.use(helmet());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
+
 app.use(requestLogger);
 //cookie parser
 app.use(cookieParser())
