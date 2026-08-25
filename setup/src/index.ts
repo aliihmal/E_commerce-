@@ -17,7 +17,11 @@ app.use(cors({
     credentials: true,
 }));
 
-//app.use(helmet());
+app.use(helmet({
+    crossOriginResourcePolicy: {
+        policy: "cross-origin",
+    },
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
