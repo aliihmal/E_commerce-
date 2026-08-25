@@ -36,7 +36,8 @@ export default function ProductsPage() {
         }
 
         const data = await response.json();
-
+          console.log("API RESPONSE:", data);
+  console.log("PRODUCTS:", data.products);
         setMyProduct(data.products);
       } catch (error) {
         console.error("Error fetching products:", error);
