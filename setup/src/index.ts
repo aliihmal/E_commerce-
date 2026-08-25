@@ -13,8 +13,8 @@ const app = express() ;
 
 
 app.use(cors({
-  origin:config.origin, // your actual frontend URL
-  credentials: true,
+    origin: "https://e-commerce-1-25t8.onrender.com",
+    credentials: true,
 }));
 
 app.use(helmet());
