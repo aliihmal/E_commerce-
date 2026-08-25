@@ -1,4 +1,4 @@
-import { log } from "winston";
+
 import { Order } from "../model/order.model";
 import { DBexception } from "../util/Exception/repoException";
 import logger from "../util/logger";
@@ -6,8 +6,7 @@ import { CartRepository } from "./cart.Repository";
 import { ConnectionManager } from "./ConnectionManager";
 import { id, Initializabel, IRpository } from "./IRepository";
 import { orderMapper, orderRow } from "../mapper/order.mapper";
-import { orderManager } from "../services/order.service";
-import { Cart } from "../model/cart.model";
+
 import { cartOrderRepos } from "./cartOrder.Repository";
 import { generateUUID } from "../util";
 

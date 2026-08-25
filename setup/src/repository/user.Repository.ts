@@ -1,4 +1,3 @@
-import { connect } from "http2";
 import { userMapper, userRow } from "../mapper/user.mapper";
 import { User } from "../model/user.model";
 import { DBexception } from "../util/Exception/repoException";

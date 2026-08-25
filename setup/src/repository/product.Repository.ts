@@ -1,4 +1,3 @@
-import { error } from "console";
 import { productMapper, productRow } from "../mapper/product.mapper";
 import { Product } from "../model/product.model";
 import { DBexception, InitializabelException } from "../util/Exception/repoException";

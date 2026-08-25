@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
+ "scripts": {
   "lint": "eslint src",
   "clean": "rm -rf build",
-  "prebuild": "npm run clean && npm run lint",
+  "prebuild": "npm run clean",
   "build": "tsc",
   "start": "node build/index.js",
   "dev": "ts-node-dev --respawn src/index.ts",

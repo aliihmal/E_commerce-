@@ -8,10 +8,7 @@ import { requestLogger } from "./middleware/requestLogger";
 
 import router from "./routes";
 import { httpExecption } from "./util/Exception/httpException";
-import { CollectionRepository } from "./repository/collection.Repository";
 import cookieParser from "cookie-parser";
-import { UserRepository } from "./repository/user.Repository";
-import { CartRepository } from "./repository/cart.Repository";
 const app = express() ;
 
 

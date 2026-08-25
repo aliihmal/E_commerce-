@@ -4,7 +4,6 @@ import logger from "../util/logger";
 import { ConnectionManager } from "./ConnectionManager";
 import { id, Initializabel, IRpository } from "./IRepository";
 import { cartMapper, cartRow } from "../mapper/Cart.mapper";
-import { log } from "console";
 
 
 

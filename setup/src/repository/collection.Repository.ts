@@ -1,4 +1,3 @@
-import { connect } from "http2";
 import { collectionMapper, collectionRow } from "../mapper/collection.mapper";
 import { Collection } from "../model/collection.model";
 import { DBexception, InitializabelException } from "../util/Exception/repoException";
