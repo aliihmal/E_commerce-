@@ -45,19 +45,21 @@ export class AuthenticatinService{
         }
 
         setTokenIntocookie(res:Response,token:string){
-            res.cookie('token',token,{
-                httpOnly:true,
-                secure:config.isProduction,
-                maxAge:ms(this.tokenExpiration)
-            })
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: config.isProduction,
+                sameSite: config.isProduction ? 'none' : 'lax',
+                maxAge: ms(this.tokenExpiration)
+            });
         }
 
         setRefreshTokenIntoCookie(res:Response,refreshToken:string){
-            res.cookie('refreshToken',refreshToken,{
-                httpOnly:true,
-                secure:config.isProduction,
-                maxAge:ms(this.refreshTokenExp)
-            })
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: config.isProduction,
+                sameSite: config.isProduction ? 'none' : 'lax',
+                maxAge: ms(this.refreshTokenExp)
+            });
         }
         clearTokens(res:Response){
             res.clearCookie('token');
