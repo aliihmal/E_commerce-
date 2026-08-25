@@ -17,7 +17,7 @@ app.use(cors({
     credentials: true,
 }));
 
-app.use(helmet());
+//app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
