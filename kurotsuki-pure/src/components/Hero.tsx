@@ -71,6 +71,7 @@ export default function Hero() {
             width: 210,
             height: 210,
             background:"white",
+            borderRadius:100,
             borderWidth:210,
             objectFit: 'contain',
             display: 'block',
