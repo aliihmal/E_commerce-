@@ -131,7 +131,7 @@ nav.site-nav {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(10, 10, 13, 0.7);
+    background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(2px);
     opacity: 0;
     pointer-events: none;
@@ -148,7 +148,7 @@ nav.site-nav {
     top: 0; right: 0;
     height: 100vh;
     width: min(70vw, 320px);
-    background: var(--panel);
+    background: #000;
     border-left: 1px solid var(--line);
     flex-direction: column;
     align-items: flex-start;
@@ -168,7 +168,7 @@ nav.site-nav {
   }
 
   .nav-links a,
-  .nav-links button {
+  .nav-links > button {
     width: 100%;
     padding: 14px 0;
     border-bottom: 1px solid var(--line);
@@ -194,8 +194,46 @@ nav.site-nav {
     cursor: pointer;
   }
 
+  /* ---- login / logout inside the sidebar ---- */
+  .nav-links .nav-right.mobile-only {
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  .nav-links .nav-right.mobile-only a,
+  .nav-links .nav-right.mobile-only button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 0;
+    border: 1px solid var(--lavender);
+    border-radius: 2px;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bone);
+  }
+
+  .nav-links .nav-right.mobile-only button {
+    border-color: var(--crimson);
+    color: var(--crimson);
+  }
+
+  .nav-links .nav-right.mobile-only button:hover {
+    background: var(--crimson);
+    color: var(--bone);
+  }
+
+  .nav-links .nav-right.mobile-only a:hover {
+    background: var(--lavender);
+    color: var(--bg);
+  }
+
   .desktop-only { display: none; }
-  .mobile-only { display: flex; margin-top: 12px; }
+  .mobile-only { display: flex; }
 }
 
 /* ---------- HERO ---------- */
@@ -473,9 +511,18 @@ footer ul a:hover { opacity: 1; color: var(--lavender); }
 }
 
 #logoutbtn {
-  background-color: red;
+  background-color: var(--crimson);
+  color: var(--bone);
   width: 80px;
   height: 30px;
   border-radius: 10px;
-  margin-left: 300px;
+}
+
+@media (max-width: 860px) {
+  #logoutbtn {
+    width: 100%;
+    height: auto;
+    padding: 12px 0;
+    border-radius: 2px;
+  }
 }
