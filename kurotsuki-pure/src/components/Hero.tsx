@@ -32,7 +32,7 @@ export default function Hero() {
         </svg>
 
         <img
-          src="/realLogo.jpeg"
+          src="/realLogo.png"
           alt="Kurotsuki logo"
           style={{
             position: 'absolute',
