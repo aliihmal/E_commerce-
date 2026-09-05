@@ -1,10 +1,11 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useEffect, useState } from 'react';
 
 export default function Navbar() {
   const { count, openCart } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
 
   type User = {
     name: string;
@@ -14,15 +15,7 @@ export default function Navbar() {
     role: string;
   };
 
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem('user');
-    if (!storedUser) return null;
-    try {
-      return JSON.parse(storedUser) as User;
-    } catch {
-      return null;
-    }
-  });
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -37,7 +30,7 @@ export default function Navbar() {
       .then((data) => setUser(data.user))
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
-  }, []);
+  }, [location.pathname]);
 
   // lock body scroll while the sidebar is open on mobile
   useEffect(() => {
@@ -85,7 +78,6 @@ export default function Navbar() {
         <span></span>
       </button>
 
-      {/* backdrop behind the sliding sidebar, click to close */}
       <div
         className={`nav-overlay ${menuOpen ? 'open' : ''}`}
         onClick={closeMenu}
@@ -128,28 +120,32 @@ export default function Navbar() {
         )}
 
         <div className="nav-right mobile-only">
-          {user ? (
-            <button onClick={() => { handleLogout(); closeMenu(); }}>
-              Logout
-            </button>
-          ) : (
-            <Link to="/login" onClick={closeMenu}>
-              Login
-            </Link>
+          {!loading && (
+            user ? (
+              <button onClick={() => { handleLogout(); closeMenu(); }}>
+                Logout
+              </button>
+            ) : (
+              <Link to="/login" onClick={closeMenu}>
+                Login
+              </Link>
+            )
           )}
         </div>
 
       </div>
 
       <div className="nav-right desktop-only">
-        {user ? (
-          <button onClick={handleLogout}>
-            Logout
-          </button>
-        ) : (
-          <Link to="/login">
-            Login
-          </Link>
+        {!loading && (
+          user ? (
+            <button onClick={handleLogout}>
+              Logout
+            </button>
+          ) : (
+            <Link to="/login">
+              Login
+            </Link>
+          )
         )}
       </div>
 
