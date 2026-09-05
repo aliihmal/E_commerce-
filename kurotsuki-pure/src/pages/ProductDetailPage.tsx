@@ -227,9 +227,7 @@ export default function ProductDetailPage() {
                     : "Out of Stock"}
               </button>
 
-              <div className="stock-note mono">
-                {product.stock} in stock
-              </div>
+             
 
             </div>
 

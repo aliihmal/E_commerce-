@@ -40,7 +40,7 @@ export default function RegisterPage() {
   return (
     <div className="auth-wrap" id="register-page">
       <Reveal>
-        <h1 className="display">Join Kurotsuki</h1>
+        <h1 className="display">Join RANDOM</h1>
         <p className="sub">Create an account to shop and place orders.</p>
 
         {error && (

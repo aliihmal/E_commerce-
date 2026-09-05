@@ -120,7 +120,7 @@ const RAW_PRODUCTS: Omit<Product, 'salePrice' | 'discountPercent' | 'onSale'>[] 
   {
     id: 7,
     name: 'Black Moon Hoodie',
-    reference: 'Kurotsuki Original',
+    reference: 'RANDOM Original',
     description: '380gsm fleece hoodie with moon-glow embroidery on the chest and a back-print climber graphic.',
     price: 68,
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],

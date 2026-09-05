@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="site-footer" id="footer">
       <div>
         <div className="brand display">
-          KUROTSUKI
+          RANDOM
           <span className="jp">黒月 — Black Moon</span>
         </div>
       </div>
@@ -32,7 +32,7 @@ export default function Footer() {
         </ul>
       </div>
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} KUROTSUKI. Fan-inspired designs, independently made.</span>
+        <span>© {new Date().getFullYear()} RANDOM. Fan-inspired designs, independently made.</span>
         <span>Baabda, Lebanon</span>
       </div>
     </footer>

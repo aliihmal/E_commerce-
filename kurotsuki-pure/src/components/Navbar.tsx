@@ -70,7 +70,7 @@ export default function Navbar() {
     <nav className="site-nav">
 
       <NavLink to="/" className="logo" onClick={closeMenu}>
-        <span className="display">KUROTSUKI</span>
+        <span className="display">RANDOM</span>
         <span className="jp">黒月</span>
       </NavLink>
 

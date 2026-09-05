@@ -6,7 +6,7 @@ export default function AboutPage() {
       <div className="page-hero">
         <Reveal>
           <div className="eyebrow">黒月 — Black Moon</div>
-          <h1 className="display">About Kurotsuki</h1>
+          <h1 className="display">About RANDOM</h1>
           <p>Anime-inspired streetwear, screen-printed in small batches, built to be worn every day.</p>
         </Reveal>
       </div>
@@ -32,7 +32,7 @@ export default function AboutPage() {
               <div>
                 <h3>Every print carries a reference.</h3>
                 <p>
-                  Kurotsuki started as a way to give the scenes that stuck with us a second life — not as a
+                  RANDOM started as a way to give the scenes that stuck with us a second life — not as a
                   filtered screenshot on a cheap tee, but as proper linework, redrawn by hand and printed on
                   fabric that lasts. We don't chase every license or every season. We pick the arcs that mean
                   something and build small runs around them.

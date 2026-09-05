@@ -77,7 +77,7 @@ const navigate = useNavigate();async function handleSubmit(e: React.FormEvent) {
     <div className="auth-wrap" id="login-page">
       <Reveal>
         <h1 className="display">Welcome Back</h1>
-        <p className="sub">Log in to your Kurotsuki account.</p>
+        <p className="sub">Log in to your RANDOM account.</p>
 
         {error && (
           <div className="form-error" id="login-error">
