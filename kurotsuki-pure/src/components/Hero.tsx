@@ -60,23 +60,24 @@ export default function Hero() {
         </svg>
 
         {/* Logo */}
-        <img
-          src="/realLogo.png"
-          alt="Kurotsuki logo"
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '28.9%',
-            transform: 'translate(-50%, -50%)',
-            width: 210,
-            height: 210,
-            background:"white",
-            borderRadius:100,
-            borderWidth:190,
-            objectFit: 'contain',
-            display: 'block',
-          }}
-        />
+      {/* Logo */}
+<img
+  src="/realLogo.png"
+  alt="Kurotsuki logo"
+  style={{
+    position: 'absolute',
+    left: '50%',
+    top: '28.9%',
+    transform: 'translate(-50%, -50%)',
+    width: 210,
+    height: 210,
+    background: "white",
+    borderRadius: 100,
+    border: '2px solid black', // Changed from borderWidth to border
+    objectFit: 'contain',
+    display: 'block',
+  }}
+/>
       </div>
 
       {/* Hero Content */}
