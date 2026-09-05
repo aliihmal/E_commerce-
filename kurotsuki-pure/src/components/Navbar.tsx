@@ -3,9 +3,10 @@ import { useCart } from '../context/CartContext';
 import { useEffect, useState } from 'react';
 
 type User = {
-  name: string;
-  email: string;
-  password?: string;
+  userId?: string;
+  id?: string;
+  name?: string;
+  email?: string;
   phone?: string;
   role: string;
 };
@@ -19,74 +20,68 @@ export default function Navbar() {
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Check if the user is logged in
- useEffect(() => {
-  const checkUser = async () => {
-    setLoading(true);
+  /*
+   * Check authentication with the backend.
+   *
+   * The backend uses the JWT stored in the cookie:
+   *
+   * browser
+   *    ↓
+   * /auth/me
+   *    ↓
+   * authenticate middleware
+   *    ↓
+   * token cookie verified
+   *    ↓
+   * user returned
+   */
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      setLoading(true);
 
-    // Check stored user first
-    const storedUser = sessionStorage.getItem("user");
+      try {
+        console.log('🔵 Checking authentication...');
 
-    console.log("SESSION USER:", storedUser);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/auth/me`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
 
-    if (!storedUser) {
-      console.log("NO USER -> SHOW LOGIN");
-      setUser(null);
-      setLoading(false);
-      return;
-    }
+        console.log('🟡 /auth/me status:', response.status);
 
-    try {
-      // Parse the stored user
-      const parsedUser = JSON.parse(storedUser);
+        if (!response.ok) {
+          console.log('🔴 User is NOT authenticated');
 
-      console.log("STORED USER:", parsedUser);
-
-      // Verify with backend
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/me`,
-        {
-          method: "GET",
-          credentials: "include",
+          setUser(null);
+          return;
         }
-      );
 
-      console.log("/auth/me STATUS:", response.status);
+        const data = await response.json();
 
-      if (!response.ok) {
-        console.log("NOT AUTHENTICATED -> SHOW LOGIN");
+        console.log('🟢 /auth/me response:', data);
+        console.log('🟢 Authenticated user:', data.user);
 
-        sessionStorage.removeItem("user");
+        setUser(data.user);
+
+      } catch (error) {
+        console.error('🔴 Authentication check failed:', error);
+
         setUser(null);
-        return;
+
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const data = await response.json();
+    checkAuthentication();
+  }, [location.pathname]);
 
-      console.log("/auth/me DATA:", data);
-
-      setUser(data.user);
-
-      // Keep sessionStorage updated
-      sessionStorage.setItem(
-        "user",
-        JSON.stringify(data.user)
-      );
-
-    } catch (error) {
-      console.error("AUTH CHECK ERROR:", error);
-
-      sessionStorage.removeItem("user");
-      setUser(null);
-
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  checkUser();
-}, [location.pathname]);
-  // Lock body scroll while sidebar is open on mobile
+  /*
+   * Prevent scrolling when the mobile sidebar is open.
+   */
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
 
@@ -95,8 +90,13 @@ export default function Navbar() {
     };
   }, [menuOpen]);
 
+  /*
+   * Logout
+   */
   const handleLogout = async () => {
     try {
+      console.log('🔵 Logging out...');
+
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/auth/logout`,
         {
@@ -105,38 +105,56 @@ export default function Navbar() {
         }
       );
 
+      console.log('🟡 Logout status:', response.status);
+
       if (!response.ok) {
         throw new Error('Logout failed');
       }
 
-      // Remove the user from React state
+      console.log('🟢 Logout successful');
+
+      // Remove user from React state
       setUser(null);
 
-      // Remove the stored user
+      // Remove stored user if LoginPage stored it
       sessionStorage.removeItem('user');
 
-      // Go to login page
+      // Close mobile menu
+      setMenuOpen(false);
+
+      // Redirect to login
       navigate('/login');
 
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('🔴 Logout error:', error);
     }
   };
 
   const isAdmin = user?.role === 'admin';
 
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
 
   return (
     <nav className="site-nav">
 
-      {/* LOGO */}
-      <NavLink to="/" className="logo" onClick={closeMenu}>
+      {/* =========================
+          LOGO
+      ========================== */}
+      <NavLink
+        to="/"
+        className="logo"
+        onClick={closeMenu}
+      >
         <span className="display">RANDOM</span>
         <span className="jp">黒月</span>
       </NavLink>
 
-      {/* MOBILE MENU BUTTON */}
+
+      {/* =========================
+          MOBILE MENU BUTTON
+      ========================== */}
       <button
         className="nav-toggle"
         aria-label="Toggle menu"
@@ -148,18 +166,27 @@ export default function Navbar() {
         <span></span>
       </button>
 
-      {/* OVERLAY */}
+
+      {/* =========================
+          MOBILE OVERLAY
+      ========================== */}
       <div
         className={`nav-overlay ${menuOpen ? 'open' : ''}`}
         onClick={closeMenu}
         aria-hidden="true"
       />
 
-      {/* NAV LINKS */}
+
+      {/* =========================
+          NAVIGATION LINKS
+      ========================== */}
       <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
 
+        {/* Mobile sidebar header */}
         <div className="sidebar-header mobile-only">
-          <span className="sidebar-title jp">黒月</span>
+          <span className="sidebar-title jp">
+            黒月
+          </span>
 
           <button
             className="sidebar-close"
@@ -170,66 +197,92 @@ export default function Navbar() {
           </button>
         </div>
 
+
+        {/* Products */}
         <NavLink
           to="/products"
-          className={({ isActive }) => (isActive ? 'active' : '')}
+          className={({ isActive }) =>
+            isActive ? 'active' : ''
+          }
           onClick={closeMenu}
         >
           Products
         </NavLink>
 
+
+        {/* Collections */}
         <NavLink
           to="/collections"
-          className={({ isActive }) => (isActive ? 'active' : '')}
+          className={({ isActive }) =>
+            isActive ? 'active' : ''
+          }
           onClick={closeMenu}
         >
           Collections
         </NavLink>
 
+
+        {/* Sales */}
         <NavLink
           to="/sales"
-          className={({ isActive }) => (isActive ? 'active' : '')}
+          className={({ isActive }) =>
+            isActive ? 'active' : ''
+          }
           onClick={closeMenu}
         >
           Sales
         </NavLink>
 
+
+        {/* About */}
         <NavLink
           to="/about"
-          className={({ isActive }) => (isActive ? 'active' : '')}
+          className={({ isActive }) =>
+            isActive ? 'active' : ''
+          }
           onClick={closeMenu}
         >
           About
         </NavLink>
 
+
+        {/* Home */}
         <NavLink
           to="/"
-          className={({ isActive }) => (isActive ? 'active' : '')}
+          className={({ isActive }) =>
+            isActive ? 'active' : ''
+          }
           onClick={closeMenu}
         >
           Home
         </NavLink>
 
-        {/* ADMIN ONLY */}
+
+        {/* =========================
+            ADMIN ONLY
+        ========================== */}
         {isAdmin && (
           <NavLink
             to="/Orders"
-            className={({ isActive }) => (isActive ? 'active' : '')}
+            className={({ isActive }) =>
+              isActive ? 'active' : ''
+            }
             onClick={closeMenu}
           >
             Orders
           </NavLink>
         )}
 
-        {/* MOBILE LOGIN / LOGOUT */}
+
+        {/* =========================
+            MOBILE LOGIN / LOGOUT
+        ========================== */}
         <div className="nav-right mobile-only">
+
           {!loading && (
             user ? (
               <button
-                onClick={() => {
-                  handleLogout();
-                  closeMenu();
-                }}
+                onClick={handleLogout}
               >
                 Logout
               </button>
@@ -242,33 +295,48 @@ export default function Navbar() {
               </Link>
             )
           )}
+
         </div>
 
       </div>
 
-      {/* DESKTOP LOGIN / LOGOUT */}
+
+      {/* =========================
+          DESKTOP LOGIN / LOGOUT
+      ========================== */}
       <div className="nav-right desktop-only">
+
         {!loading && (
           user ? (
-            <button onClick={handleLogout}>
+            <button
+              onClick={handleLogout}
+            >
               Logout
             </button>
           ) : (
-            <Link to="/login">
+            <Link
+              to="/login"
+            >
               Login
             </Link>
           )
         )}
+
       </div>
 
-      {/* CART */}
+
+      {/* =========================
+          CART
+      ========================== */}
       <div className="nav-right">
+
         <button
           className="nav-cart-btn"
           onClick={openCart}
         >
           CART ({count})
         </button>
+
       </div>
 
     </nav>
