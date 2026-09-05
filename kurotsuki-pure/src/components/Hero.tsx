@@ -23,28 +23,24 @@ export default function Hero() {
             </radialGradient>
           </defs>
           <circle cx="720" cy="260" r="240" fill="url(#moonGlow)" />
-          <g opacity="0.55" fill="#0a0a0d">
-            <ellipse cx="0" cy="620" rx="420" ry="140" />
-            <ellipse cx="380" cy="700" rx="520" ry="160" />
-            <ellipse cx="1000" cy="680" rx="520" ry="150" />
-            <ellipse cx="1440" cy="640" rx="420" ry="140" />
-          </g>
+        
         </svg>
 
-        <img
-          src="/realLogo.png"
-          alt="Kurotsuki logo"
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '28.9%',
-            transform: 'translate(-50%, -50%)',
-            width: 210,
-            height: 'auto',
-            background:"white",
-            borderRadius:100,
-          }}
-        />
+       <img
+      src="/realLogo.png"
+      alt="Kurotsuki logo"
+      style={{
+        position: 'absolute',
+        left: '50%',
+        top: '28.9%',
+        transform: 'translate(-50%, -50%)',
+        width: 210,
+        height: 210,
+        objectFit: 'contain',
+        background: 'white',
+        borderRadius: '50%',
+      }}
+      />
 
         <motion.div
           style={{
