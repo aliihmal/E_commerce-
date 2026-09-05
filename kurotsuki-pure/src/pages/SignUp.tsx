@@ -8,20 +8,23 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    setSuccess('');
     setSubmitting(true);
 
-    const payload ={
+    const payload = {
       name,
       email,
       password,
-      phone
-    }
-    const createUser = async () => {
+      phone,
+    };
+
+    try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/user/`, {
         method: 'POST',
         headers: {
@@ -31,10 +34,24 @@ export default function RegisterPage() {
       });
 
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'Could not create account');
+      }
+
       console.log(data);
-    };
-    createUser();
-    setSubmitting(false);
+
+      setSuccess('Account created successfully! You can now log in.');
+
+      setName('');
+      setEmail('');
+      setPassword('');
+      setPhone('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not create account');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -46,6 +63,12 @@ export default function RegisterPage() {
         {error && (
           <div className="form-error" id="register-error">
             {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="form-success" id="register-success">
+            {success}
           </div>
         )}
 
@@ -98,7 +121,6 @@ export default function RegisterPage() {
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
-            
           </div>
 
           <button
