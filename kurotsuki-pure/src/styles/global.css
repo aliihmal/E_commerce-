@@ -67,7 +67,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--lavender); outl
 .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
 
 /* ---------- NAV ---------- */
-/* ---------- NAV ---------- */
 nav.site-nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
@@ -101,7 +100,7 @@ nav.site-nav {
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 110;
+  z-index: 1001;
 }
 .nav-toggle span {
   display: block;
@@ -122,31 +121,78 @@ nav.site-nav {
 
 .mobile-only { display: none; }
 
+/* backdrop behind the sliding sidebar */
+.nav-overlay { display: none; }
+
 @media (max-width: 860px) {
   .nav-toggle { display: flex; }
+
+  .nav-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 13, 0.7);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 999;
+  }
+  .nav-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
   .nav-links {
     position: fixed;
     top: 0; right: 0;
     height: 100vh;
     width: min(70vw, 320px);
-    background: #0a0a0a; /* swap for your actual bg/dark var if you have one */
+    background: var(--panel);
+    border-left: 1px solid var(--line);
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
-    gap: 28px;
-    padding: 0 10vw;
+    justify-content: flex-start;
+    gap: 4px;
+    padding: 24px 8vw 40px;
     font-size: 0.9rem;
     transform: translateX(100%);
     transition: transform 0.35s ease;
     mix-blend-mode: normal;
+    z-index: 1000;
+    overflow-y: auto;
   }
 
   .nav-links.open {
     transform: translateX(0);
   }
 
+  .nav-links a,
+  .nav-links button {
+    width: 100%;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
   .nav-links a::after { display: none; }
+
+  .sidebar-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sidebar-title { font-size: 1.3rem; color: var(--lavender); }
+  .sidebar-close {
+    font-size: 1.1rem;
+    color: var(--bone);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
 
   .desktop-only { display: none; }
   .mobile-only { display: flex; margin-top: 12px; }
@@ -355,9 +401,11 @@ footer ul a:hover { opacity: 1; color: var(--lavender); }
   box-shadow: 0 10px 40px rgba(0,0,0,0.4);
 }
 .toast.error { border-color: var(--crimson); }
-#productimgesss{
+
+#productimgesss {
   width: 330px;
 }
+
 .add-collection-section {
   padding-top: 40px;
   max-width: 720px;
@@ -412,215 +460,22 @@ footer ul a:hover { opacity: 1; color: var(--lavender); }
   font-size: 0.78rem;
   color: var(--grey);
 }
-.collectionImg{
-  width: 400px ;
+
+.collectionImg {
+  width: 400px;
   height: 400px;
 }
-#collectionD_Btn{
+
+#collectionD_Btn {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-:root {
-  --bg: #0a0a0d;
-  --panel: #131019;
-  --panel-2: #17131f;
-  --lavender: #a99bd9;
-  --lavender-dim: #6f6690;
-  --crimson: #c23b4a;
-  --green: #6f9d7a;
-  --bone: #f2f0ec;
-  --grey: #8b8894;
-  --line: rgba(242, 240, 236, 0.1);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  background: var(--bg);
-  color: var(--bone);
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-}
-
-.display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.02em; }
-
-a { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
-
-input, textarea, select {
-  font-family: inherit;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  color: var(--bone);
-  border-radius: 2px;
-  padding: 12px 14px;
-  font-size: 0.92rem;
-  transition: border-color 0.2s;
-  width: 100%;
-}
-input:focus, textarea:focus, select:focus { outline: none; border-color: var(--lavender); }
-
-label {
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--grey);
-  display: block;
-  margin-bottom: 8px;
-}
-
-/* ---------- BUTTONS ---------- */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  padding: 14px 30px; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
-  border-radius: 2px; transition: all 0.25s cubic-bezier(.2,.7,.3,1);
-  border: 1px solid var(--lavender);
-}
-.btn-primary { background: var(--lavender); color: var(--bg); }
-.btn-primary:hover {
-  background: var(--bone);
-  border-color: var(--bone);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(169,155,217,0.25);
-}
-.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
-
-/* ---------- FORMS / AUTH ---------- */
-.auth-wrap { max-width: 440px; margin: 0 auto; padding: 160px 6vw 100px; }
-.auth-wrap h1 { font-size: clamp(2.4rem, 6vw, 3.4rem); margin-bottom: 8px; }
-.auth-wrap .sub { color: var(--grey); margin-bottom: 40px; }
-
-.form-field { margin-bottom: 20px; }
-
-.form-error {
-  background: rgba(194,59,74,0.12);
-  border: 1px solid var(--crimson);
-  color: var(--bone);
-  padding: 12px 16px;
-  font-size: 0.85rem;
-  border-radius: 2px;
-  margin-bottom: 20px;
-}
-
-.auth-switch {
-  margin-top: 24px;
-  font-size: 0.85rem;
-  color: var(--grey);
-  text-align: center;
-}
-.auth-switch a { color: var(--lavender); }
-
-
-
-
-:root {
-  --bg: #0a0a0d;
-  --panel: #131019;
-  --panel-2: #17131f;
-  --lavender: #a99bd9;
-  --lavender-dim: #6f6690;
-  --crimson: #c23b4a;
-  --green: #6f9d7a;
-  --bone: #f2f0ec;
-  --grey: #8b8894;
-  --line: rgba(242, 240, 236, 0.1);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  background: var(--bg);
-  color: var(--bone);
-  font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-}
-
-.display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.02em; }
-
-a { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
-
-input, textarea, select {
-  font-family: inherit;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  color: var(--bone);
-  border-radius: 2px;
-  padding: 12px 14px;
-  font-size: 0.92rem;
-  transition: border-color 0.2s;
-  width: 100%;
-}
-input:focus, textarea:focus, select:focus { outline: none; border-color: var(--lavender); }
-
-label {
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--grey);
-  display: block;
-  margin-bottom: 8px;
-}
-
-/* ---------- BUTTONS ---------- */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  padding: 14px 30px; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
-  border-radius: 2px; transition: all 0.25s cubic-bezier(.2,.7,.3,1);
-  border: 1px solid var(--lavender);
-}
-.btn-primary { background: var(--lavender); color: var(--bg); }
-.btn-primary:hover {
-  background: var(--bone);
-  border-color: var(--bone);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(169,155,217,0.25);
-}
-.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
-
-/* ---------- FORMS / AUTH ---------- */
-.auth-wrap { max-width: 440px; margin: 0 auto; padding: 160px 6vw 100px; }
-.auth-wrap h1 { font-size: clamp(2.4rem, 6vw, 3.4rem); margin-bottom: 8px; }
-.auth-wrap .sub { color: var(--grey); margin-bottom: 40px; }
-
-.form-field { margin-bottom: 20px; }
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-@media (max-width: 560px) {
-  .form-row { grid-template-columns: 1fr; }
-}
-
-.form-error {
-  background: rgba(194,59,74,0.12);
-  border: 1px solid var(--crimson);
-  color: var(--bone);
-  padding: 12px 16px;
-  font-size: 0.85rem;
-  border-radius: 2px;
-  margin-bottom: 20px;
-}
-
-.auth-switch {
-  margin-top: 24px;
-  font-size: 0.85rem;
-  color: var(--grey);
-  text-align: center;
-}
-.auth-switch a { color: var(--lavender); }
-
-
-
-#logoutbtn{
+#logoutbtn {
   background-color: red;
   width: 80px;
   height: 30px;
   border-radius: 10px;
   margin-left: 300px;
 }
-
