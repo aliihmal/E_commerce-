@@ -72,7 +72,7 @@ export default function Hero() {
             height: 210,
             background:"white",
             borderRadius:100,
-            borderWidth:210,
+            borderWidth:190,
             objectFit: 'contain',
             display: 'block',
           }}
