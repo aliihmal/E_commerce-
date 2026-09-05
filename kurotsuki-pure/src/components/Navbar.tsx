@@ -20,66 +20,72 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Check if the user is logged in
-  useEffect(() => {
-    const checkUser = async () => {
-      setLoading(true);
+ useEffect(() => {
+  const checkUser = async () => {
+    setLoading(true);
 
-      // First check sessionStorage
-      const storedUser = sessionStorage.getItem('user');
+    // Check stored user first
+    const storedUser = sessionStorage.getItem("user");
 
-      if (storedUser) {
-        try {
-          setUser(JSON.parse(storedUser));
-        } catch {
-          sessionStorage.removeItem('user');
-          setUser(null);
+    console.log("SESSION USER:", storedUser);
+
+    if (!storedUser) {
+      console.log("NO USER -> SHOW LOGIN");
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Parse the stored user
+      const parsedUser = JSON.parse(storedUser);
+
+      console.log("STORED USER:", parsedUser);
+
+      // Verify with backend
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/auth/me`,
+        {
+          method: "GET",
+          credentials: "include",
         }
-      } else {
+      );
+
+      console.log("/auth/me STATUS:", response.status);
+
+      if (!response.ok) {
+        console.log("NOT AUTHENTICATED -> SHOW LOGIN");
+
+        sessionStorage.removeItem("user");
         setUser(null);
+        return;
       }
 
-      // Then verify the authentication with the backend
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/auth/me`,
-          {
-            credentials: 'include',
-          }
-        );
+      const data = await response.json();
 
-        if (!response.ok) {
-          // Backend says user is not authenticated
-          setUser(null);
-          sessionStorage.removeItem('user');
-          return;
-        }
+      console.log("/auth/me DATA:", data);
 
-        const data = await response.json();
+      setUser(data.user);
 
-        // Update user from backend
-        setUser(data.user);
+      // Keep sessionStorage updated
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+      );
 
-        // Keep sessionStorage synchronized
-        sessionStorage.setItem('user', JSON.stringify(data.user));
+    } catch (error) {
+      console.error("AUTH CHECK ERROR:", error);
 
-      } catch (error) {
-        console.error('Authentication check failed:', error);
+      sessionStorage.removeItem("user");
+      setUser(null);
 
-        // If backend cannot be reached, keep the sessionStorage user
-        // if one exists.
-        const stored = sessionStorage.getItem('user');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        if (!stored) {
-          setUser(null);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkUser();
-  }, [location.pathname]);
-
+  checkUser();
+}, [location.pathname]);
   // Lock body scroll while sidebar is open on mobile
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
