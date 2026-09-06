@@ -18,6 +18,10 @@ export class AuthenticatinService {
         private tokenExpiration = config.auth.tokenExpiration,
     ) {}
 
+    // ============================================================
+    // Generate access token
+    // ============================================================
+
     generateToken(payload: UserPayload): string {
         return jwt.sign(
             payload,
@@ -27,6 +31,10 @@ export class AuthenticatinService {
             }
         );
     }
+
+    // ============================================================
+    // Generate refresh token
+    // ============================================================
 
     generateRefreshToken(payload: UserPayload): string {
         return jwt.sign(
@@ -38,8 +46,13 @@ export class AuthenticatinService {
         );
     }
 
+    // ============================================================
+    // Verify token
+    // ============================================================
+
     verirfyToken(token: string): UserPayload {
         try {
+
             return jwt.verify(
                 token,
                 this.secretKey
@@ -47,7 +60,10 @@ export class AuthenticatinService {
 
         } catch (error) {
 
-            logger.error("Token verification failed", error);
+            logger.error(
+                "Token verification failed",
+                error
+            );
 
             if (error instanceof jwt.TokenExpiredError) {
                 throw new TokenExepiredException();
@@ -57,71 +73,185 @@ export class AuthenticatinService {
                 throw new InvalidTokenException();
             }
 
-            throw new ServiceException("token verification failed");
+            throw new ServiceException(
+                "Token verification failed"
+            );
         }
     }
 
-    setTokenIntocookie(res: Response, token: string): void {
-        res.cookie("token", token, {
+    // ============================================================
+    // Cookie options
+    // ============================================================
+
+    private getCookieOptions(maxAge: number) {
+        return {
             httpOnly: true,
-            secure: config.isProduction,
-            sameSite: config.isProduction ? "none" : "lax",
-            maxAge: ms(this.tokenExpiration),
+
+            // Render uses HTTPS
+            secure: true,
+
+            // Frontend and backend are on different domains
+            sameSite: "none" as const,
+
+            maxAge,
+
             path: "/",
-        });
+        };
     }
+
+    // ============================================================
+    // Set access token cookie
+    // ============================================================
+
+    setTokenIntocookie(
+        res: Response,
+        token: string
+    ): void {
+
+        res.cookie(
+            "token",
+            token,
+            this.getCookieOptions(
+                ms(this.tokenExpiration)
+            )
+        );
+
+        logger.info(
+            "Access token cookie created"
+        );
+    }
+
+    // ============================================================
+    // Set refresh token cookie
+    // ============================================================
 
     setRefreshTokenIntoCookie(
         res: Response,
         refreshToken: string
     ): void {
-        res.cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            secure: config.isProduction,
-            sameSite: config.isProduction ? "none" : "lax",
-            maxAge: ms(this.refreshTokenExp),
-            path: "/",
-        });
+
+        res.cookie(
+            "refreshToken",
+            refreshToken,
+            this.getCookieOptions(
+                ms(this.refreshTokenExp)
+            )
+        );
+
+        logger.info(
+            "Refresh token cookie created"
+        );
     }
 
-    clearTokens(res: Response): void {
+    // ============================================================
+    // Clear authentication cookies
+    // ============================================================
 
-        res.clearCookie("token", {
-            httpOnly: true,
-            secure: config.isProduction,
-            sameSite: config.isProduction ? "none" : "lax",
-            path: "/",
-        });
+    clearTokens(
+        res: Response
+    ): void {
 
-        res.clearCookie("refreshToken", {
+        const options = {
             httpOnly: true,
-            secure: config.isProduction,
-            sameSite: config.isProduction ? "none" : "lax",
+            secure: true,
+            sameSite: "none" as const,
             path: "/",
-        });
+        };
+
+        res.clearCookie(
+            "token",
+            options
+        );
+
+        res.clearCookie(
+            "refreshToken",
+            options
+        );
+
+        logger.info(
+            "Authentication cookies cleared"
+        );
     }
+
+    // ============================================================
+    // Persist authentication after login
+    // ============================================================
 
     persistAuthentication(
         res: Response,
         payload: UserPayload
     ): void {
 
-        const token = this.generateToken(payload);
-        const refreshToken = this.generateRefreshToken(payload);
+        const token =
+            this.generateToken(payload);
 
-        this.setTokenIntocookie(res, token);
-        this.setRefreshTokenIntoCookie(res, refreshToken);
+        const refreshToken =
+            this.generateRefreshToken(payload);
+
+        this.setTokenIntocookie(
+            res,
+            token
+        );
+
+        this.setRefreshTokenIntoCookie(
+            res,
+            refreshToken
+        );
+
+        logger.info(
+            "Authentication persisted successfully"
+        );
     }
 
-    refreshToken(refreshToken: string): string {
+    // ============================================================
+    // Refresh access token
+    // ============================================================
 
-        const payload = this.verirfyToken(refreshToken);
+    refreshToken(
+        refreshToken: string
+    ): string {
+
+        const payload =
+            this.verirfyToken(refreshToken);
 
         const newPayload: UserPayload = {
             userId: payload.userId,
             role: payload.role
         };
 
-        return this.generateToken(newPayload);
+        return this.generateToken(
+            newPayload
+        );
     }
 }
+// ```
+
+// After replacing it:
+
+// **1. Save the file.**
+// **2. Build your backend.**
+
+// ```bash
+// npm run build
+// ```
+
+// **3. Deploy/redeploy the backend to Render.**
+
+// **4. On your phone, log out and log in again.** This is important because the old cookies may still be present.
+
+// Then try adding the product again.
+
+// Also fix this small typo in your `LoginPage`:
+
+// ```ts
+// sessionStorage.setItem("user", JSON.stringify(data.user));
+
+// console.log(
+//     "USER STORED:",
+//     sessionStorage.getItem("user")
+// );
+// ```
+
+// instead of checking `localStorage`.
+
+// If the phone **still gets 401 after this**, send me your `config` file next. That will be the next thing to check.
