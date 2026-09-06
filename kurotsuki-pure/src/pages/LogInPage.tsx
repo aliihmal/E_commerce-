@@ -40,18 +40,21 @@ const navigate = useNavigate();async function handleSubmit(e: React.FormEvent) {
 
         console.log("LOGIN RESPONSE:", data);
 
-     if (response.ok) {
+if (response.ok) {
+    console.log("LOGIN SUCCESS");
+    console.log("LOGIN DATA:", data);
 
-    console.log("LOGIN RESPONSE:", data);
-    sessionStorage.setItem("user", JSON.stringify(data.user));
+    sessionStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+    );
 
     console.log(
         "USER STORED:",
-        localStorage.getItem("user")
+        sessionStorage.getItem("user")
     );
 
     navigate("/products");
-
 } else {
 
     setError(
