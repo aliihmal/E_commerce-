@@ -84,20 +84,20 @@ export class AuthenticatinService {
     // ============================================================
 
     private getCookieOptions(maxAge: number) {
-        return {
-            httpOnly: true,
+    return {
+        httpOnly: true,
 
-            // Render uses HTTPS
-            secure: true,
+        // Render uses HTTPS
+        secure: true,
 
-            // Frontend and backend are on different domains
-            sameSite: "none" as const,
+        // Frontend and backend are on different domains
+        sameSite: "none" as const,
 
-            maxAge,
+        maxAge,
 
-            path: "/",
-        };
-    }
+        path: "/",
+    };
+}
 
     // ============================================================
     // Set access token cookie
