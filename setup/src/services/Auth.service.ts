@@ -83,18 +83,12 @@ export class AuthenticatinService {
     // Cookie options
     // ============================================================
 
-    private getCookieOptions(maxAge: number) {
+private getCookieOptions(maxAge: number) {
     return {
         httpOnly: true,
-
-        // Render uses HTTPS
         secure: true,
-
-        // Frontend and backend are on different domains
-        sameSite: "none" as const,
-
+        sameSite: "lax" as const,
         maxAge,
-
         path: "/",
     };
 }
