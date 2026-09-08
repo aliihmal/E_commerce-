@@ -101,7 +101,7 @@ export default function Hero() {
         </div>
 
         <h1 className="display">
-          KUROTSUKI
+         RANDOM
         </h1>
 
         <p className="sub">
